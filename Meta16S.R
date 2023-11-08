@@ -1,11 +1,10 @@
 # ---
-# title: "Soil diversity 16s"
+# title: "Soil diversity 16S"
 # authors: "Pedro Mondaca - Francisco E. Fonturbel"
-# date: "07/nov/2022"
 # ---
 
 ## A meta-analysis on agricultural management effects on soil diversity
-#  This meta-analysis assesses the effects of different types of agricultural management on microbial diversity of the soil using 16s marker.
+#  This meta-analysis assesses the effects of different types of agricultural management on microbial diversity of the soil using 16S marker.
 # 
 setwd("D:\\Backup\\2022\\1-Meta-análisis microbioma suelos agrícolas\\2023")
 
@@ -474,7 +473,7 @@ orchard_plot(H_fam_MA, mod = "management", data = H_family, group = "paper_code"
 #hasta aquí llego
 
 
-
+# Additional analyses, not published
 ## Examining agricultural management effect ####
 
 manage.mod<-update.meta(overall.mod,
@@ -717,70 +716,3 @@ forest.meta(manage.mod,
 
 #NO EFFECT
 
-
-
-#SECTION 2: BETA DIVERSITY ####
-
-#Cambia la composici?n?
-
-# abund<-data %>%
-#   dplyr::filter(cat_response == "abund")
-
-abund<-dat %>%
-  dplyr::filter(cat_response == "abund")
-
-abund[abund == 0] <- 0.0000000001
-min(abund$Xc)
-min(abund$Xe)
-dim(abund)
-
-abund2<-abund %>% 
-  mutate(oli = case_when(Xe == 0.0000000001 & Xc == 0.0000000001 ~ 0))
-
-dim(abund2)
-
-abund3<-abund2 %>%
-  filter(Xe != 0 & Xc != 0) 
-
-dim(abund3)
-
-Chequear
-
-
-
-overall.mod<-metacont(Ne, Xe, Se, Nc, Xc, Sc, 
-                      data = abund2,
-                      fixed = FALSE,
-                      random = TRUE,
-                      method.tau = "REML",
-                      hakn = TRUE,
-                      prediction = TRUE,
-                      sm = "SMD",
-                      method.smd = "Hedges")
-summary.meta(overall.mod)
-
-manage.mod<-update.meta(overall.mod,
-                        subgroup = response)
-
-summary.meta(manage.mod)
-forest.meta(manage.mod,
-            random = TRUE,
-            layout = "subgroup",
-            overall = FALSE,
-            prediction = FALSE,
-            hetstat = FALSE,
-            xlim=c(-1,2.5))
-
-
-abund_cyan<-abund2 %>%
-  dplyr::filter(response == "Cyanobacteria")
-abund_cyan2<-dat %>%
-  dplyr::filter(response == "Cyanobacteria")
-abund_cyan3<-abund %>%
-  dplyr::filter(response == "Cyanobacteria")
-
-Descubrir xq se me van los valores de Cyanobacteria al usar el filter!
-
-dim(abund_cyan)
-dim(abund_cyan2)
-dim(abund_cyan3)
